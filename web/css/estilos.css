@@ -1,0 +1,39 @@
+body{
+	width:750px;
+	margin: 0 auto;
+}
+h1{
+	text-align:center;
+}
+
+.grande{
+	width:750px;
+	height:600px;
+}
+
+.icono{
+	width:30px;
+	height:20px;
+}
+
+.banner{
+	width:750px;
+	height:100px
+}
+.fijo{
+	width:35px;
+}
+p{
+	text-align:justify;
+}
+footer{
+	width:750px;
+	border:solid 1px;
+	border-color:blue;
+}
+
+address{
+	padding-top:15px;
+	font-family:"Times New Roman";
+	text-align:center;
+}

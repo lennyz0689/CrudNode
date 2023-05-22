@@ -1,0 +1,34 @@
+<%- include('header') -%>
+<h1> Articulos  (<%= modelo.length%>)</h1>
+<div class="table-responsive-sm" style="width:750px">
+<table class="table table-hover">
+<thead>
+<tr>
+<th>Producto </th>
+<th>Precio </th>
+<th>Descripción </th>
+<th class="d-print-none"> <a class="btn btn-sm btn-success" href="/crear"> <img src="img/nuevo1.png" class="icono" /> </a> </th>
+<th class="d-print-none"> <a class="btn btn-sm btn-success" href="/Buscar"> <img src="img/buscar1.png" class="icono" /> </a> </th>
+</tr>
+</thead>
+
+<tbody>
+<% for (const producto of modelo) { %>
+<tr> 
+<td><%= producto.Nombre%></td>
+<td><%= producto.Precio%></td>
+<td><%= producto.Descripcion%></td>
+<td class="fijo">
+<a class="btn btn-sm btn-warning" href="/editar/<%=producto.Producto_ID %>"><img src="img/edit1.png" class="icono" /> </a>
+</td>
+
+<td class="fijo">
+<a class="btn btn-sm btn-danger" href="/eliminar/<%=producto.Producto_ID %>"><img src="img/delete1.png" class="icono" /> </a>
+</td>
+</tr>
+<% } %>
+</tbody>
+
+</table>
+</div>
+<%- include('footer') -%>
