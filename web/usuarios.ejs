@@ -6,9 +6,9 @@
       <tr>
         <th>Nombre</th>
         <th>Apellido</th>
+        <th>Tipo de Documento</th>
         <th>Número de Documento</th>
         <th>Teléfono</th>
-        <th>Tipo de Documento</th>
         <th>Rol</th>
         <th>Estado</th>
         <th class="d-print-none">
@@ -28,11 +28,11 @@
         <tr>
           <td><%= usuario.Nombre %></td>
           <td><%= usuario.Apellido %></td>
+          <td><%= usuario.tipoDocumento %></td>
           <td><%= usuario.NumeroDocumento %></td>
           <td><%= usuario.Telefono %></td>
-          <td><%= usuario.documento ? usuario.documento.Documento : '' %></td>
           <td><%= usuario.Rol %></td>
-          <td><%= usuario.Estado ? usuario.Estado.Descripcion : '' %></td>
+          <td><%= usuario.Estado %></td>
           <td class="fijo">
             <a class="btn btn-sm btn-warning" href="/editar/<%= usuario.Id_usuario %>">
               <img src="img/edit1.png" class="icono" />

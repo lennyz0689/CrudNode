@@ -83,52 +83,60 @@
     timestamps: false // Desactiva las columnas createdAt y updatedAt
   });
 
-  // Definición de las relaciones
-  usuarios.belongsTo(tipoDocumento, { foreignKey: 'tipoDocumento', as: 'documento' });
-  usuarios.belongsTo(rol, { foreignKey: 'Rol' });
-  usuarios.belongsTo(isActive, { foreignKey: 'Estado' });
+ // Definición de las relaciones
+usuarios.belongsTo(tipoDocumento, { foreignKey: 'tipoDocumento', as: 'documento' });
+usuarios.belongsTo(rol, { foreignKey: 'Rol' });
+usuarios.belongsTo(isActive, { foreignKey: 'Estado' });
 
+// Configuración del servidor
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, ""));
+app.use(express.static(__dirname + '/'));
+app.use(express.urlencoded({ extended: false }));
+app.listen(8000);
+console.log("Servidor corriendo exitosamente en el puerto 8000");
 
-  // Configuración del servidor
-  app.set("view engine", "ejs");
-  app.set("views", path.join(__dirname, ""));
-  app.use(express.static(__dirname + '/'));
-  app.use(express.urlencoded({ extended: false }));
-  app.listen(8000);
-  console.log("Servidor corriendo exitosamente en el puerto 8000");
-
-  // Sincronizar los modelos con la base de datos
-  sequelize.sync()
-    .then(() => {
-      console.log('Conexión exitosa con la base de datos');
-    })
-    .catch((err) => {
-      console.error('Error al conectar con la base de datos:', err);
-    });
-
-  // Enrutamiento
-  app.get('/', (req, res) => {
-    res.render('index.ejs');
+// Sincronizar los modelos con la base de datos
+sequelize.sync()
+  .then(() => {
+    console.log('Conexión exitosa con la base de datos');
+  })
+  .catch((err) => {
+    console.error('Error al conectar con la base de datos:', err);
   });
 
-  app.get('/acerca', (req, res) => {
-    res.render('acerca.ejs');
-  });
+// Enrutamiento
+app.get('/', (req, res) => {
+  res.render('index.ejs');
+});
 
-  app.get('/contacto', (req, res) => {
-    res.render('contacto.ejs');
-  });
+app.get('/acerca', (req, res) => {
+  res.render('acerca.ejs');
+});
+
+app.get('/contacto', (req, res) => {
+  res.render('contacto.ejs');
+});
 
 // Mostrar tabla de usuarios
 app.get('/usuarios', async (req, res) => {
   try {
-    const listaUsuarios = await usuarios.findAll({ order: [['Nombre', 'ASC']] });
+    const listaUsuarios = await usuarios.findAll({ 
+      order: [['Nombre', 'ASC']],
+      include: [
+        {
+          model: tipoDocumento,
+          as: 'documento'
+        }
+      ]
+    });
     res.render('usuarios.ejs', { modelo: listaUsuarios });
   } catch (err) {
     console.error(err);
     res.status(500).send('Error al obtener los usuarios');
   }
 });
+
 
 
   // Crear un nuevo Registro
@@ -214,7 +222,9 @@ app.get('/usuarios', async (req, res) => {
     }
   });
 
-  // Ruta de página no encontrada
-  app.get('/*', (req, res) => {
-    res.render('notfound.ejs');
-  });
+// Ruta de página no encontrada
+app.get('/*', (req, res) => {
+  res.render('notfound.ejs');
+});
+
+  
