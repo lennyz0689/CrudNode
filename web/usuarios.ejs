@@ -1,0 +1,51 @@
+<%- include('header') -%>
+<h1>Usuarios (<%= usuarios.length %>)</h1>
+<div class="table-responsive-sm" style="width:750px">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Tipo de Documento</th>
+        <th>Número de Documento</th>
+        <th>Teléfono</th>
+        <th>Rol</th>
+        <th>Estado</th>
+        <th class="d-print-none">
+          <a class="btn btn-sm btn-success" href="/crear">
+            <img src="img/nuevo1.png" class="icono" />
+          </a>
+        </th>
+        <th class="d-print-none">
+          <a class="btn btn-sm btn-success" href="/Buscar">
+            <img src="img/buscar1.png" class="icono" />
+          </a>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (const usuario of usuarios) { %>
+        <tr>
+          <td><%= usuario.Nombre %></td>
+          <td><%= usuario.Apellido %></td>
+          <td><%= usuario.tipoDocumento.Documento %></td>
+          <td><%= usuario.NumeroDocumento %></td>
+          <td><%= usuario.Telefono %></td>
+          <td><%= usuario.Rol.Rol %></td>
+          <td><%= usuario.Estado.Descripcion %></td>
+          <td class="fijo">
+            <a class="btn btn-sm btn-warning" href="/editar/<%= usuario.Id_usuario %>">
+              <img src="img/edit1.png" class="icono" />
+            </a>
+          </td>
+          <td class="fijo">
+            <a class="btn btn-sm btn-danger" href="/eliminar/<%= usuario.Id_usuario %>">
+              <img src="img/delete1.png" class="icono" />
+            </a>
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+<%- include('footer') -%>
