@@ -2,19 +2,57 @@
 const http = require('http');
 const express = require('express');
 const { Sequelize, DataTypes } = require('sequelize');
+const path = require('path');
+
 
 const app = express();
 
 // Configuración de Sequelize
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: 'db/base.db', // Ruta a tu archivo de base de datos SQLite
+  storage: 'db/universidad.db', // Ruta a tu archivo de base de datos SQLite
   logging: false // Desactiva los logs de Sequelize
 });
 
-// Definición del modelo
-const Producto = sequelize.define('Producto', {
-  Producto_ID: {
+// Definición de los modelos
+const isActive = sequelize.define('isActive', {
+  Id_active: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  Descripcion: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  }
+});
+
+const rol = sequelize.define('rol', {
+  Id_rol: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  Rol: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  }
+});
+
+const tipoDocumento = sequelize.define('tipoDocumento', {
+  Id_documento: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  Documento: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  }
+});
+
+const usuarios = sequelize.define('usuarios', {
+  Id_usuario: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
@@ -23,15 +61,25 @@ const Producto = sequelize.define('Producto', {
     type: DataTypes.STRING(100),
     allowNull: false
   },
-  Precio: {
-    type: DataTypes.FLOAT,
+  Apellido: {
+    type: DataTypes.STRING(100),
     allowNull: false
   },
-  Descripcion: {
-    type: DataTypes.TEXT,
-    allowNull: true
+  NumeroDocumento: {
+    type: DataTypes.STRING(20),
+    allowNull: false
+  },
+  Telefono: {
+    type: DataTypes.STRING(20),
+    allowNull: false
   }
 });
+
+// Definición de las relaciones
+usuarios.belongsTo(tipoDocumento, { foreignKey: 'tipoDocumento', as: 'documento' });
+usuarios.belongsTo(rol, { foreignKey: 'Rol' });
+usuarios.belongsTo(isActive, { foreignKey: 'Estado' });
+
 
 // Configuración del servidor
 app.set("view engine", "ejs");
@@ -41,7 +89,7 @@ app.use(express.urlencoded({ extended: false }));
 app.listen(8000);
 console.log("Servidor corriendo exitosamente en el puerto 8000");
 
-// Sincronizar el modelo con la base de datos
+// Sincronizar los modelos con la base de datos
 sequelize.sync()
   .then(() => {
     console.log('Conexión exitosa con la base de datos');
@@ -63,14 +111,14 @@ app.get('/contacto', (req, res) => {
   res.render('contacto.ejs');
 });
 
-// Mostrar tabla de Productos
-app.get('/productos', async (req, res) => {
+// Mostrar tabla de usuarios
+app.get('/usuarios', async (req, res) => {
   try {
-    const productos = await Producto.findAll({ order: [['Nombre', 'ASC']] });
-    res.render('Productos.ejs', { modelo: productos });
+    const usuarios = await usuarios.findAll({ order: [['Nombre', 'ASC']] });
+    res.render('usuarios.ejs', { modelo: usuarios });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error al obtener los productos');
+    res.status(500).send('Error al obtener los usuarios');
   }
 });
 
@@ -81,71 +129,79 @@ app.get('/crear', (req, res) => {
 
 app.post('/crear', async (req, res) => {
   try {
-    await Producto.create({
+    await usuarios.create({
       Nombre: req.body.Nombre,
-      Precio: req.body.Precio,
-      Descripcion: req.body.Descripcion
+      Apellido: req.body.Apellido,
+      NumeroDocumento: req.body.NumeroDocumento,
+      Telefono: req.body.Telefono,
+      tipoDocumento: req.body.tipoDocumento,
+      Rol: req.body.Rol,
+      Estado: req.body.Estado
     });
-    res.redirect("/productos");
+    res.redirect("/usuarios");
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error al crear el producto');
+    res.status(500).send('Error al crear el usuario');
   }
 });
 
 // Editar un Registro
 app.get("/editar/:id", async (req, res) => {
   try {
-    const producto = await Producto.findByPk(req.params.id);
-    res.render("editar.ejs", { modelo: producto });
+    const usuario = await usuarios.findByPk(req.params.id);
+    res.render("editar.ejs", { modelo: usuario });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error al obtener el producto');
+    res.status(500).send('Error al obtener el usuario');
   }
 });
 
 app.post("/editar/:id", async (req, res) => {
   try {
-    const producto = await Producto.findByPk(req.params.id);
-    if (producto) {
-      await producto.update({
+    const usuario = await usuarios.findByPk(req.params.id);
+    if (usuario) {
+      await usuario.update({
         Nombre: req.body.Nombre,
-        Precio: req.body.Precio,
-        Descripcion: req.body.Descripcion
+        Apellido: req.body.Apellido,
+        NumeroDocumento: req.body.NumeroDocumento,
+        Telefono: req.body.Telefono,
+        tipoDocumento: req.body.tipoDocumento,
+        Rol: req.body.Rol,
+        Estado: req.body.Estado
       });
-      res.redirect("/productos");
+      res.redirect("/usuarios");
     } else {
-      res.status(404).send('Producto no encontrado');
+      res.status(404).send('Usuario no encontrado');
     }
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error al actualizar el producto');
+    res.status(500).send('Error al actualizar el usuario');
   }
 });
 
 // Eliminar un Registro
 app.get("/eliminar/:id", async (req, res) => {
   try {
-    const producto = await Producto.findByPk(req.params.id);
-    res.render("eliminar.ejs", { modelo: producto });
+    const usuario = await usuarios.findByPk(req.params.id);
+    res.render("eliminar.ejs", { modelo: usuario });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error al obtener el producto');
+    res.status(500).send('Error al obtener el usuario');
   }
 });
 
 app.post("/eliminar/:id", async (req, res) => {
   try {
-    const producto = await Producto.findByPk(req.params.id);
-    if (producto) {
-      await producto.destroy();
-      res.redirect("/productos");
+    const usuario = await usuarios.findByPk(req.params.id);
+    if (usuario) {
+      await usuario.destroy();
+      res.redirect("/usuarios");
     } else {
-      res.status(404).send('Producto no encontrado');
+      res.status(404).send('Usuario no encontrado');
     }
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error al eliminar el producto');
+    res.status(500).send('Error al eliminar el usuario');
   }
 });
 
