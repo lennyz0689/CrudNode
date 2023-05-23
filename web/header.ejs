@@ -2,29 +2,43 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name ="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>CRUD NodeJS</title>
 <link rel="stylesheet" href="/css/bootstrap.css">
 <link rel="stylesheet" href="/css/estilos.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<style>
+  body {
+    background: linear-gradient(to bottom right, #9C27B0, #2196F3);
+    background-attachment: fixed;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+  }
 
+  .navbar {
+    margin-top: 40px; /* Ajusta el valor según sea necesario */
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .navbar .nav-link {
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar .nav-link i {
+    margin-right: 5px;
+  }
+</style>
 </head>
 <body>
-
-</body>
 <div class="container">
-<img src="https://img.freepik.com/psd-premium/banner-horizontal-realidad-virtual_23-2148937702.jpg" class="banner">
-<!-- https://img.freepik.com/psd-premium/banner-horizontal-realidad-virtual_23-2148937702.jpg?w=826 
-<img src="https://image.freepik.com/vector-gratis/diseno-banner-tecnologia-onda-azul_1017-15367.jpg" class="banner">
--->
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="width:750px">
-
-<ul class="navbar-nav mr-auto">
-<li class="nav-item"> <a class="nav-link" href="/">Inicio </a></li>
-<li class="nav-item"> <a class="nav-link" href="/acerca">Acerca de   </a></li>
-<li class="nav-item"> <a class="nav-link" href="/usuarios">Articulos   </a></li>
-<li class="nav-item"> <a class="nav-link" href="/contacto">Contáctanos  </a></li>
-</ul>
-</nav>
-
-
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="width: 750px; margin-top: 40px;">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><a class="nav-link" href="/"><i class="fas fa-home"></i> Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="/acerca"><i class="fas fa-info-circle"></i> Acerca de</a></li>
+          <li class="nav-item"><a class="nav-link" href="/usuarios"><i class="fas fa-shopping-cart"></i> Articulos</a></li>
+          <li class="nav-item"><a class="nav-link" href="/contacto"><i class="fas fa-envelope"></i> Contáctanos</a></li>
+        </ul>
+      </nav>      
+</div>
+</body>
 </html>

@@ -3,6 +3,8 @@
   const express = require('express');
   const { Sequelize, DataTypes } = require('sequelize');
   const path = require('path');
+  const regexNumeroDocumento = /^[0-9]+$/;
+  const regexTelefono = /^[0-9]+$/;
 
 
   const app = express();
@@ -146,11 +148,22 @@ app.get('/usuarios', async (req, res) => {
 
   app.post('/crear', async (req, res) => {
     try {
+      const { NumeroDocumento, Telefono } = req.body;
+  
+      // Validación de números en NumeroDocumento y Telefono
+      if (!regexNumeroDocumento.test(NumeroDocumento)) {
+        throw new Error('El número de documento debe contener solo números.');
+      }
+  
+      if (!regexTelefono.test(Telefono)) {
+        throw new Error('El número de teléfono debe contener solo números.');
+      }
+  
       await usuarios.create({
         Nombre: req.body.Nombre,
         Apellido: req.body.Apellido,
-        NumeroDocumento: req.body.NumeroDocumento,
-        Telefono: req.body.Telefono,
+        NumeroDocumento: NumeroDocumento,
+        Telefono: Telefono,
         tipoDocumento: req.body.tipoDocumento,
         Rol: req.body.Rol,
         Estado: req.body.Estado
@@ -161,6 +174,7 @@ app.get('/usuarios', async (req, res) => {
       res.status(500).send('Error al crear el usuario');
     }
   });
+  
 
   // Editar un Registro
   app.get("/editar/:id", async (req, res) => {
@@ -172,16 +186,26 @@ app.get('/usuarios', async (req, res) => {
       res.status(500).send('Error al obtener el usuario');
     }
   });
-
   app.post("/editar/:id", async (req, res) => {
     try {
       const usuario = await usuarios.findByPk(req.params.id);
       if (usuario) {
+        const { NumeroDocumento, Telefono } = req.body;
+  
+        // Validación de números en NumeroDocumento y Telefono
+        if (!regexNumeroDocumento.test(NumeroDocumento)) {
+          throw new Error('El número de documento debe contener solo números.');
+        }
+  
+        if (!regexTelefono.test(Telefono)) {
+          throw new Error('El número de teléfono debe contener solo números.');
+        }
+  
         await usuario.update({
           Nombre: req.body.Nombre,
           Apellido: req.body.Apellido,
-          NumeroDocumento: req.body.NumeroDocumento,
-          Telefono: req.body.Telefono,
+          NumeroDocumento: NumeroDocumento,
+          Telefono: Telefono,
           tipoDocumento: req.body.tipoDocumento,
           Rol: req.body.Rol,
           Estado: req.body.Estado
@@ -195,6 +219,7 @@ app.get('/usuarios', async (req, res) => {
       res.status(500).send('Error al actualizar el usuario');
     }
   });
+  
 
   // Eliminar un Registro
   app.get("/eliminar/:id", async (req, res) => {
