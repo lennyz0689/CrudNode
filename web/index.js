@@ -139,6 +139,46 @@ app.get('/usuarios', async (req, res) => {
   }
 });
 
+// Ruta de búsqueda
+app.get('/buscar', async (req, res) => {
+  try {
+    const { campo, valor } = req.query;
+    let whereClause = {};
+
+    // Verificar qué campo de búsqueda se seleccionó
+    switch (campo) {
+      case 'Nombre':
+      case 'Apellido':
+      case 'NumeroDocumento':
+      case 'Telefono':
+      case 'Rol':
+      case 'Estado':
+        whereClause[campo] = valor;
+        break;
+      case 'tipoDocumento':
+        whereClause = {
+          '$documento.Documento$': valor
+        };
+        break;
+      default:
+        throw new Error('Campo de búsqueda inválido');
+    }
+
+    const listaUsuarios = await usuarios.findAll({
+      where: whereClause,
+      include: [
+        {
+          model: tipoDocumento,
+          as: 'documento'
+        }
+      ]
+    });
+    res.render('usuarios.ejs', { modelo: listaUsuarios });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error al buscar los usuarios');
+  }
+});
 
 
   // Crear un nuevo Registro
@@ -186,40 +226,40 @@ app.get('/usuarios', async (req, res) => {
       res.status(500).send('Error al obtener el usuario');
     }
   });
-  app.post("/editar/:id", async (req, res) => {
-    try {
-      const usuario = await usuarios.findByPk(req.params.id);
-      if (usuario) {
-        const { NumeroDocumento, Telefono } = req.body;
-  
-        // Validación de números en NumeroDocumento y Telefono
-        if (!regexNumeroDocumento.test(NumeroDocumento)) {
-          throw new Error('El número de documento debe contener solo números.');
-        }
-  
-        if (!regexTelefono.test(Telefono)) {
-          throw new Error('El número de teléfono debe contener solo números.');
-        }
-  
-        await usuario.update({
-          Nombre: req.body.Nombre,
-          Apellido: req.body.Apellido,
-          NumeroDocumento: NumeroDocumento,
-          Telefono: Telefono,
-          tipoDocumento: req.body.tipoDocumento,
-          Rol: req.body.Rol,
-          Estado: req.body.Estado
-        });
-        res.redirect("/usuarios");
-      } else {
-        res.status(404).send('Usuario no encontrado');
+app.post("/editar/:id", async (req, res) => {
+  try {
+    const usuario = await usuarios.findByPk(req.params.id);
+    if (usuario) {
+      const { NumeroDocumento, Telefono } = req.body;
+
+      // Validación de números en NumeroDocumento y Telefono
+      if (!regexNumeroDocumento.test(NumeroDocumento)) {
+        throw new Error('El número de documento debe contener solo números.');
       }
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Error al actualizar el usuario');
+
+      if (!regexTelefono.test(Telefono)) {
+        throw new Error('El número de teléfono debe contener solo números.');
+      }
+
+      await usuario.update({
+        Nombre: req.body.Nombre,
+        Apellido: req.body.Apellido,
+        NumeroDocumento: NumeroDocumento,
+        Telefono: Telefono,
+        tipoDocumento: req.body.tipoDocumento,
+        Rol: req.body.Rol,
+        Estado: req.body.Estado
+      });
+      res.redirect("/usuarios");
+    } else {
+      res.status(404).send('Usuario no encontrado');
     }
-  });
-  
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error al actualizar el usuario');
+  }
+});
+
 
   // Eliminar un Registro
   app.get("/eliminar/:id", async (req, res) => {
@@ -251,5 +291,7 @@ app.get('/usuarios', async (req, res) => {
 app.get('/*', (req, res) => {
   res.render('notfound.ejs');
 });
+
+
 
   

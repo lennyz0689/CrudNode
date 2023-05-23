@@ -1,5 +1,5 @@
 <div class="container" style="background-color: white; width: 800px; border: 3px double black; padding: 20px;">
-<div class="form-group row">
+  <div class="form-group row">
     <label class="col-form-label col-sm-2" for="Nombre">Nombre</label>
     <div class="col-sm-8">
       <input type="text" autofocus class="form-control" name="Nombre" value="<%= modelo.Nombre %>" />
@@ -16,7 +16,13 @@
   <div class="form-group row">
     <label class="col-form-label col-sm-2" for="tipoDocumento">Tipo de Documento</label>
     <div class="col-sm-8">
-      <input type="text" class="form-control" name="tipoDocumento" value="<%= modelo.tipoDocumento %>" />
+      <select class="form-control" name="tipoDocumento">
+        <option value="0" <%= modelo.tipoDocumento === '0' ? 'selected' : '' %>>Cédula de Ciudadanía</option>
+        <option value="1" <%= modelo.tipoDocumento === '1' ? 'selected' : '' %>>cedula de extrangeria</option>
+        <option value="2" <%= modelo.tipoDocumento === '1' ? 'selected' : '' %>>Tarjeta de Identidad</option>
+        <option value="3" <%= modelo.tipoDocumento === '1' ? 'selected' : '' %>>Permiso de permanencia</option>
+        <option value="4" <%= modelo.tipoDocumento === '1' ? 'selected' : '' %>>Pasaporte</option>
+      </select>
     </div>
   </div>
   
@@ -37,15 +43,22 @@
   <div class="form-group row">
     <label class="col-form-label col-sm-2" for="Rol">Rol</label>
     <div class="col-sm-8">
-      <input type="text" class="form-control" name="Rol" value="<%= modelo.Rol %>" />
+      <select class="form-control" name="Rol">
+        <option value="0" <%= modelo.Rol === '0' ? 'selected' : '' %>>Estudiante</option>
+        <option value="1" <%= modelo.Rol === '1' ? 'selected' : '' %>>Decano</option>
+        <option value="2" <%= modelo.Rol === '1' ? 'selected' : '' %>>Profesor</option>
+        <option value="3" <%= modelo.Rol === '1' ? 'selected' : '' %>>Coordinador</option>
+      </select>
     </div>
   </div>
   
   <div class="form-group row">
     <label class="col-form-label col-sm-2" for="Estado">Estado</label>
     <div class="col-sm-8">
-      <input type="text" class="form-control" name="Estado" value="<%= modelo.Estado %>" />
+      <select class="form-control" name="Estado">
+        <option value="0" <%= modelo.Estado === '0' ? 'selected' : '' %>>Deshabilitado</option>
+        <option value="1" <%= modelo.Estado === '1' ? 'selected' : '' %>>Activo</option>
+      </select>
     </div>
   </div>
-  
   
